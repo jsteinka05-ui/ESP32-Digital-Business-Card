@@ -1,3 +1,6 @@
+# Local reference material
+/local-notes/
+
 # ESP-IDF generated output and downloaded components
 /firmware/build/
 /firmware/managed_components/

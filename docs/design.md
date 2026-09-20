@@ -274,11 +274,11 @@ The application will wait for a stable release before accepting another gesture 
 
 ### Sleep-Mode Evaluation
 
-Light sleep is an initial candidate because retaining application state could simplify wake restoration.
+Ordinary light sleep is the initial approach because it retains application state and supports the existing GPIO6 button with the GPIO peripheral powered.
 
-Deep sleep may provide additional savings but requires treating wake-up as a restart and preserving any required state explicitly.
+ESP32-C3 GPIO wake from deep sleep is limited to GPIO0–5. GPIO6 therefore does not support the planned button wake in deep sleep. Peripheral power-down light-sleep configurations have the same restricted wake-pin requirement and are outside the initial implementation.
 
-The final choice will depend on button wake-up support, measured consumption, panel behavior, and acceptable wake-up latency.
+The implementation will evaluate ordinary light-sleep consumption, panel restoration, and wake latency on the assembled board. See [ESP-IDF sleep modes](https://docs.espressif.com/projects/esp-idf/en/v6.0.1/esp32c3/api-reference/system/sleep_modes.html) and the [ESP32-C3 GPIO capability definitions](https://github.com/espressif/esp-idf/blob/v6.0.1/components/soc/esp32c3/include/soc/soc_caps.h).
 
 Active current, idle current, and wake-up latency are the power-management performance metrics.
 
@@ -320,6 +320,8 @@ The following acceptance checks define completion of the replacement firmware on
 - Prototype wiring and custom PCB assembly completed; the PCB is implemented in the working device.
 
 ### Firmware Rewrite and Remaining Integration
+
+The [firmware development plan](firmware-plan.md) groups the following work into stages F1–F7, corresponding to repository Steps 2–8.
 
 1. Establish repository structure and hardware documentation.
 2. Build minimal firmware with startup logging.
