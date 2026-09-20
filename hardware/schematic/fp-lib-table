@@ -1,0 +1,7 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "xiao ESP32C3_PCB")(type "KiCad")(uri "${KIPRJMOD}/libraries/project/XIAO_Custom.pretty")(options "")(descr "Custom through-hole footprint recovered from this project's PCB"))
+  (lib (name "Seeed_XIAO_Original")(type "KiCad")(uri "${KIPRJMOD}/libraries/seeed/xiao ESP32C3_PCB.pretty")(options "")(descr "Original Seeed surface-mount footprint; not the placed PCB variant"))
+  (lib (name "XIAO_ESP32C3")(type "KiCad")(uri "${KIPRJMOD}/libraries/vectorspace/XIAO_ESP32C3.pretty")(options "")(descr "VectorSpaceHQ footprint referenced by the library symbol default"))
+  (lib (name "Library")(type "KiCad")(uri "${KIPRJMOD}/Library.pretty")(options "")(descr ""))
+)

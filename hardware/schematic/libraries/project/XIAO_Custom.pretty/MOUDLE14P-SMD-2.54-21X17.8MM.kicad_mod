@@ -1,0 +1,496 @@
+(footprint "MOUDLE14P-SMD-2.54-21X17.8MM"
+  (version 20241229)
+  (generator pcbnew)
+  (layer "F.Cu")
+  (property "Reference" "REF**"
+    (at 9.3345 -21.7805 0)
+    (layer "F.SilkS")
+    (hide yes)
+    (effects
+      (font
+        (size 0.7 0.7)
+        (thickness 0.15)
+      )
+    )
+  )
+  (property "Value" "XIAO ESP32C3"
+    (at 8.89 -10.795 0)
+    (layer "F.Fab")
+    (effects
+      (font
+        (size 0.48 0.48)
+        (thickness 0.15)
+      )
+    )
+  )
+  (property "Datasheet" "https://files.seeedstudio.com/wiki/Seeed-Studio-XIAO-ESP32/esp32-c3_datasheet.pdf"
+    (at 0 0 0)
+    (layer "F.Fab")
+    (hide yes)
+    (effects
+      (font
+        (size 1.27 1.27)
+        (thickness 0.15)
+      )
+    )
+  )
+  (property "Description" "ESP32C3 Transceiver Evaluation Board"
+    (at 0 0 0)
+    (layer "F.Fab")
+    (hide yes)
+    (effects
+      (font
+        (size 1.27 1.27)
+        (thickness 0.15)
+      )
+    )
+  )
+  (property "MANUFACTURER" "Seeed Technology"
+    (at 0 0 0)
+    (unlocked yes)
+    (layer "F.Fab")
+    (hide yes)
+    (effects
+      (font
+        (size 1 1)
+        (thickness 0.15)
+      )
+    )
+  )
+  (attr through_hole)
+  (fp_line
+    (start 0 -20.3285)
+    (end 0 0)
+    (stroke
+      (width 0.127)
+      (type solid)
+    )
+    (layer "F.SilkS")
+  )
+  (fp_line
+    (start 0 0)
+    (end 17.8 0)
+    (stroke
+      (width 0.127)
+      (type solid)
+    )
+    (layer "F.SilkS")
+  )
+  (fp_line
+    (start 0.671541 -21)
+    (end 0 -20.3285)
+    (stroke
+      (width 0.127)
+      (type solid)
+    )
+    (layer "F.SilkS")
+  )
+  (fp_line
+    (start 17.8 -21)
+    (end 0.671541 -21)
+    (stroke
+      (width 0.127)
+      (type solid)
+    )
+    (layer "F.SilkS")
+  )
+  (fp_line
+    (start 17.8 0)
+    (end 17.8 -21)
+    (stroke
+      (width 0.127)
+      (type solid)
+    )
+    (layer "F.SilkS")
+  )
+  (fp_circle
+    (center -0.889 -18.161)
+    (end -0.635 -18.161)
+    (stroke
+      (width 0)
+      (type solid)
+    )
+    (fill yes)
+    (layer "Dwgs.User")
+  )
+  (fp_poly
+    (pts
+      (xy 0 -20.955)
+      (xy 17.653 -20.955)
+      (xy 17.653 0)
+      (xy 0 0)
+    )
+    (stroke
+      (width 0.01)
+      (type solid)
+    )
+    (fill yes)
+    (layer "F.CrtYd")
+  )
+  (pad "1" thru_hole oval
+    (at 1.245 -18.12)
+    (size 2 1.8)
+    (drill 1)
+    (layers "*.Cu" "*.Mask")
+    (remove_unused_layers no)
+  )
+  (pad "2" thru_hole oval
+    (at 1.245 -15.58)
+    (size 2 1.8)
+    (drill 1)
+    (layers "*.Cu" "*.Mask")
+    (remove_unused_layers no)
+  )
+  (pad "3" thru_hole oval
+    (at 1.245 -13.04)
+    (size 2 1.8)
+    (drill 1)
+    (layers "*.Cu" "*.Mask")
+    (remove_unused_layers no)
+  )
+  (pad "4" thru_hole oval
+    (at 1.245 -10.5)
+    (size 2 1.8)
+    (drill 1)
+    (layers "*.Cu" "*.Mask")
+    (remove_unused_layers no)
+  )
+  (pad "5" thru_hole oval
+    (at 1.245 -7.96)
+    (size 2 1.8)
+    (drill 1)
+    (layers "*.Cu" "*.Mask")
+    (remove_unused_layers no)
+  )
+  (pad "6" thru_hole oval
+    (at 1.245 -5.42)
+    (size 2 1.8)
+    (drill 1)
+    (layers "*.Cu" "*.Mask")
+    (remove_unused_layers no)
+  )
+  (pad "7" thru_hole oval
+    (at 1.245 -2.88)
+    (size 2 1.8)
+    (drill 1)
+    (layers "*.Cu" "*.Mask")
+    (remove_unused_layers no)
+  )
+  (pad "8" thru_hole oval
+    (at 16.485 -2.86)
+    (size 2 1.8)
+    (drill 1)
+    (layers "*.Cu" "*.Mask")
+    (remove_unused_layers no)
+  )
+  (pad "9" thru_hole oval
+    (at 16.485 -5.4)
+    (size 2 1.8)
+    (drill 1)
+    (layers "*.Cu" "*.Mask")
+    (remove_unused_layers no)
+  )
+  (pad "10" thru_hole oval
+    (at 16.485 -7.94)
+    (size 2 1.8)
+    (drill 1)
+    (layers "*.Cu" "*.Mask")
+    (remove_unused_layers no)
+  )
+  (pad "11" thru_hole oval
+    (at 16.485 -10.48)
+    (size 2 1.8)
+    (drill 1)
+    (layers "*.Cu" "*.Mask")
+    (remove_unused_layers no)
+  )
+  (pad "12" thru_hole oval
+    (at 16.485 -13.02)
+    (size 2 1.8)
+    (drill 1)
+    (layers "*.Cu" "*.Mask")
+    (remove_unused_layers no)
+  )
+  (pad "13" thru_hole oval
+    (at 16.485 -15.56)
+    (size 2 1.8)
+    (drill 1)
+    (layers "*.Cu" "*.Mask")
+    (remove_unused_layers no)
+  )
+  (pad "14" thru_hole oval
+    (at 16.485 -18.1)
+    (size 2 1.8)
+    (drill 1)
+    (layers "*.Cu" "*.Mask")
+    (remove_unused_layers no)
+  )
+  (zone
+    (net_name "")
+    (layer "F.Cu")
+    (hatch full 0.508)
+    (connect_pads
+      (clearance 0)
+    )
+    (min_thickness 0.01)
+    (filled_areas_thickness no)
+    (keepout
+      (tracks not_allowed)
+      (vias not_allowed)
+      (pads not_allowed)
+      (copperpour not_allowed)
+      (footprints allowed)
+    )
+    (placement
+      (enabled no)
+      (sheetname "")
+    )
+    (fill
+      (thermal_gap 0.508)
+      (thermal_bridge_width 0.508)
+    )
+    (polygon
+      (pts
+        (xy 96.4895 32.9065)
+        (xy 99.4105 32.9065)
+        (xy 99.4105 34.9385)
+        (xy 96.4895 34.9385)
+      )
+    )
+  )
+  (zone
+    (net_name "")
+    (layer "F.Cu")
+    (hatch full 0.508)
+    (connect_pads
+      (clearance 0)
+    )
+    (min_thickness 0.01)
+    (filled_areas_thickness no)
+    (keepout
+      (tracks not_allowed)
+      (vias not_allowed)
+      (pads not_allowed)
+      (copperpour not_allowed)
+      (footprints allowed)
+    )
+    (placement
+      (enabled no)
+      (sheetname "")
+    )
+    (fill
+      (thermal_gap 0.508)
+      (thermal_bridge_width 0.508)
+    )
+    (polygon
+      (pts
+        (xy 97.188 24.588)
+        (xy 98.966 24.588)
+        (xy 98.966 27.255)
+        (xy 97.188 27.255)
+      )
+    )
+  )
+  (zone
+    (net_name "")
+    (layer "F.Cu")
+    (hatch full 0.508)
+    (connect_pads
+      (clearance 0)
+    )
+    (min_thickness 0.01)
+    (filled_areas_thickness no)
+    (keepout
+      (tracks not_allowed)
+      (vias not_allowed)
+      (pads not_allowed)
+      (copperpour not_allowed)
+      (footprints allowed)
+    )
+    (placement
+      (enabled no)
+      (sheetname "")
+    )
+    (fill
+      (thermal_gap 0.508)
+      (thermal_bridge_width 0.508)
+    )
+    (polygon
+      (pts
+        (xy 97.188 28.652)
+        (xy 98.966 28.652)
+        (xy 98.966 31.319)
+        (xy 97.188 31.319)
+      )
+    )
+  )
+  (zone
+    (net_name "")
+    (layer "F.Cu")
+    (hatch full 0.508)
+    (connect_pads
+      (clearance 0)
+    )
+    (min_thickness 0.01)
+    (filled_areas_thickness no)
+    (keepout
+      (tracks not_allowed)
+      (vias not_allowed)
+      (pads not_allowed)
+      (copperpour not_allowed)
+      (footprints allowed)
+    )
+    (placement
+      (enabled no)
+      (sheetname "")
+    )
+    (fill
+      (thermal_gap 0.508)
+      (thermal_bridge_width 0.508)
+    )
+    (polygon
+      (pts
+        (xy 99.855 25.35)
+        (xy 105.062 25.35)
+        (xy 105.062 32.335)
+        (xy 99.855 32.335)
+      )
+    )
+  )
+  (zone
+    (net_name "")
+    (layer "F.Cu")
+    (hatch full 0.508)
+    (connect_pads
+      (clearance 0)
+    )
+    (min_thickness 0.01)
+    (filled_areas_thickness no)
+    (keepout
+      (tracks not_allowed)
+      (vias not_allowed)
+      (pads not_allowed)
+      (copperpour not_allowed)
+      (footprints allowed)
+    )
+    (placement
+      (enabled no)
+      (sheetname "")
+    )
+    (fill
+      (thermal_gap 0.508)
+      (thermal_bridge_width 0.508)
+    )
+    (polygon
+      (pts
+        (xy 99.855 42.495)
+        (xy 105.57 42.495)
+        (xy 105.57 45.035)
+        (xy 99.855 45.035)
+      )
+    )
+  )
+  (zone
+    (net_name "")
+    (layer "F.Cu")
+    (hatch full 0.508)
+    (connect_pads
+      (clearance 0)
+    )
+    (min_thickness 0.01)
+    (filled_areas_thickness no)
+    (keepout
+      (tracks not_allowed)
+      (vias not_allowed)
+      (pads not_allowed)
+      (copperpour not_allowed)
+      (footprints allowed)
+    )
+    (placement
+      (enabled no)
+      (sheetname "")
+    )
+    (fill
+      (thermal_gap 0.508)
+      (thermal_bridge_width 0.508)
+    )
+    (polygon
+      (pts
+        (xy 103.284 34.367)
+        (xy 106.332 34.367)
+        (xy 106.332 37.415)
+        (xy 103.284 37.415)
+      )
+    )
+  )
+  (zone
+    (net_name "")
+    (layer "F.Cu")
+    (hatch full 0.508)
+    (connect_pads
+      (clearance 0)
+    )
+    (min_thickness 0.01)
+    (filled_areas_thickness no)
+    (keepout
+      (tracks not_allowed)
+      (vias not_allowed)
+      (pads not_allowed)
+      (copperpour not_allowed)
+      (footprints allowed)
+    )
+    (placement
+      (enabled no)
+      (sheetname "")
+    )
+    (fill
+      (thermal_gap 0.508)
+      (thermal_bridge_width 0.508)
+    )
+    (polygon
+      (pts
+        (xy 105.824 24.588)
+        (xy 107.602 24.588)
+        (xy 107.602 27.255)
+        (xy 105.824 27.255)
+      )
+    )
+  )
+  (zone
+    (net_name "")
+    (layer "F.Cu")
+    (hatch full 0.508)
+    (connect_pads
+      (clearance 0)
+    )
+    (min_thickness 0.01)
+    (filled_areas_thickness no)
+    (keepout
+      (tracks not_allowed)
+      (vias not_allowed)
+      (pads not_allowed)
+      (copperpour not_allowed)
+      (footprints allowed)
+    )
+    (placement
+      (enabled no)
+      (sheetname "")
+    )
+    (fill
+      (thermal_gap 0.508)
+      (thermal_bridge_width 0.508)
+    )
+    (polygon
+      (pts
+        (xy 105.824 28.652)
+        (xy 107.602 28.652)
+        (xy 107.602 31.319)
+        (xy 105.824 31.319)
+      )
+    )
+  )
+  (group ""
+    (members "124a7c4c-4906-4cf3-b9b9-d9e842cd11d7" "1ec3716d-d123-4ef9-a83a-8aeead0812f9" "97b87d2c-c7eb-410f-b0e4-6b3ac8f79f59" "a3a8eb1a-c7a3-447e-bd70-7f54cf79f928" "bd47b2be-a1f7-4c64-af46-7e88178875fb" "d4ed2c26-2fca-4eb5-bbe6-81c3f1f4daa5" "dbefd327-4c8f-428d-8b69-91c4f50efc0c")
+  )
+  (embedded_fonts no)
+)
