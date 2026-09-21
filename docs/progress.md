@@ -38,7 +38,7 @@ Status: core application working
 - [x] Establish the project build configuration.
 - [x] Implement an increasing counter logged once per second, with a FreeRTOS task delay between messages.
 - [x] Build, flash, and verify counter output on the device through the serial monitor.
-- [ ] Add a one-time startup log message before the loop.
+- [x] Add a one-time startup log message before the loop.
 - [ ] Verify counter restart after reset and a USB power cycle.
 - [x] Record build, flash, and monitor instructions in `firmware/README.md`.
 
@@ -48,6 +48,8 @@ Status: raw GPIO input checkpoint complete
 
 Commit title: `Add GPIO6 button module and raw input polling`
 
+Commit: `e0f1294`.
+
 - [x] Separate the button interface and implementation into `button.h` and `button.c`.
 - [x] Configure GPIO6 as an input with its internal pull-up enabled.
 - [x] Expose the active-low input as a boolean pressed state.
@@ -55,13 +57,31 @@ Commit title: `Add GPIO6 button module and raw input polling`
 - [x] Log only changes, using `Status: 1` for pressed and `Status: 0` for released.
 - [x] Verify expected press/release reporting on the assembled board, with no repeated messages during a steady hold or idle state.
 
-The initial reading establishes the comparison state without logging an event. These are raw readings; mechanical bounce can still produce additional transitions. Debouncing and release-based short/long classification are the next checkpoints.
+This checkpoint established raw input polling. Debouncing and release-based classification are implemented in the completed checkpoint below.
+
+## Step 3 : Button Input: Debouncing and Gestures
+
+Date: 2026-09-21
+
+Status: complete
+
+Proposed commit title: `Add button debouncing and release-based gesture detection`
+
+- [x] Accept press and release transitions after 30 ms of stable input.
+- [x] Classify presses shorter than 900 ms as short and presses of at least 900 ms as long.
+- [x] Emit one gesture event on release, with no repeated gestures while held.
+- [x] Ignore gesture classification for a button already held at startup.
+- [x] Log startup, accepted presses, and classified releases through the serial monitor.
+- [x] Pass simulated bounce, threshold, startup-held, and reinitialization checks.
+- [x] Build with ESP-IDF v6.1 and verify expected operation after flashing the board.
+
+Validation results are recorded in [testing.md](testing.md). Display actions are the next stage; the current gesture events produce serial logs.
 
 ## Upcoming Milestones
 
 | Step | Scope | Status |
 |---|---|---|
-| 3 | Button input, debouncing, and press classification | In progress; raw input complete |
+| 3 | Button input, debouncing, and press classification | Complete |
 | 4 | Display initialization, drawing, and orientation | Planned |
 | 5 | Embedded images and slide navigation | Planned |
 | 6 | LCD recovery and incremental animated transitions | Planned |

@@ -8,7 +8,7 @@ The device is designed to display personal contact information and a LinkedIn QR
 
 A working physical prototype, custom PCB assembly, wiring, and 3D-printed enclosure are complete. Current development focuses on the firmware rewrite and a new inactivity sleep feature.
 
-The physical prototype predates this repository. The C firmware rewrite now includes a minimal ESP-IDF v6.1 application that builds, flashes, and polls GPIO6 every 10 ms on the ESP32-C3, logging raw button state changes. Debouncing, gesture classification, display operation, and sleep support are upcoming firmware stages.
+The physical prototype predates this repository. The C firmware rewrite now includes a minimal ESP-IDF v6.1 application that builds, flashes, and polls GPIO6 approximately every 10 ms on the ESP32-C3, debounces input over 30 ms, and classifies short and long presses on release. Display operation and sleep support are upcoming firmware stages.
 
 Hardware design files and printable enclosure models are available under [hardware/](hardware/README.md).
 
@@ -81,7 +81,7 @@ The intended development environment is:
 - A USB data connection to the XIAO ESP32-C3.
 - Python for image-conversion tooling when added.
 
-Firmware development takes place under `firmware/`. The application now runs on the board with raw button polling; the [progress log](docs/progress.md) tracks the remaining F1 checks and upcoming stages.
+Firmware development takes place under `firmware/`. The application now runs on the board with debounced button input and gesture logging; the [progress log](docs/progress.md) tracks the remaining F1 checks and upcoming stages.
 
 ## Roadmap
 
@@ -89,7 +89,7 @@ Firmware development takes place under `firmware/`. The application now runs on 
 - [x] Document the initial design.
 - [x] Complete prototype wiring, custom PCB assembly, and printed enclosure.
 - [x] Organize KiCad files, manufacturing exports, and enclosure models.
-- [ ] Implement startup logging and debounced button input.
+- [x] Implement startup logging and debounced button input.
 - [ ] Initialize the display and verify drawing, colors, and orientation.
 - [ ] Display embedded slides and implement navigation.
 - [ ] Add LCD recovery and animated transitions.
@@ -99,6 +99,7 @@ Firmware development takes place under `firmware/`. The application now runs on 
 ## Documentation
 
 - [Firmware rewrite design](docs/design.md): architecture, hardware selection, interaction rules, and validation plan.
+- [Firmware validation](docs/testing.md): build checks, simulated button tests, and hardware results.
 - [Firmware development plan](docs/firmware-plan.md): implementation stages and completion criteria.
 - [Hardware](hardware/README.md): KiCad project, parts inventory, and manufacturing revisions.
 - [Enclosure](hardware/enclosure/README.md): top case, bottom case, and button models.

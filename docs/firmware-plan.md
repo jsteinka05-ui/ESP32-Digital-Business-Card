@@ -2,7 +2,7 @@
 
 ## Current Progress
 
-The hardware baseline is complete: assembled PCB, wiring, enclosure, and operating prototype. The C/ESP-IDF rewrite now has a minimal application running on the ESP32-C3 with ESP-IDF v6.1. Build, flash, and once-per-second counter output have been verified on the board. The counter exercise has since been replaced by F2 checkpoint 1: modular GPIO6 input polling with state-change logging, verified on the board. Startup logging and reset/power-cycle checks remain open from F1.
+The hardware baseline is complete: assembled PCB, wiring, enclosure, and operating prototype. The ESP-IDF v6.1 application now implements 30 ms button debouncing and release-based short/long-press classification. The firmware builds, simulated input tests pass, and operation after flashing has been verified on the board. F2 is complete; F3 introduces the display driver. The separate reset/power-cycle check from F1 remains open.
 
 Development proceeds through seven firmware stages. Each stage produces a working increment, validation evidence, and a focused commit. Firmware stage F1 corresponds to Step 2 in the [progress log](progress.md); Step 1 records the hardware and repository baseline.
 
@@ -11,7 +11,7 @@ Development proceeds through seven firmware stages. Each stage produces a workin
 | Stage | Repository step | Deliverable | Completion criterion | Status |
 |---|---|---|---|---|
 | F1 | 2 | Minimal ESP-IDF application | Builds for ESP32-C3, logs periodically, and restarts correctly | Core working; final checks remaining |
-| F2 | 3 | Button input and gesture events | Debounced short/long events occur once per gesture, classified on release | In progress; raw input complete |
+| F2 | 3 | Button input and gesture events | Debounced short/long events occur once per gesture, classified on release | Complete |
 | F3 | 4 | Display driver and bounded drawing | Repeated startup, color fills, corner markers, and rectangle bounds pass | Planned |
 | F4 | 5 | Embedded images and slide navigation | Two correctly oriented slides cycle reliably and the displayed QR scans | Planned |
 | F5 | 6 | LCD recovery and incremental animation | Recovery preserves the slide; transitions maintain input tracking | Planned |
@@ -78,7 +78,7 @@ Evidence: clean-checkout and automated builds, hardware results tied to a firmwa
 
 Each implementation commit includes its relevant documentation and test changes. Milestones may span multiple commits when they contain independently verifiable behavior, particularly input handling, display bring-up, recovery, and sleep.
 
-The [progress log](progress.md) records completed stages and commit references. `firmware/README.md` contains the build instructions; `docs/testing.md` will contain measured acceptance results as testing begins. A successful build establishes compilation, while hardware behavior is recorded separately.
+The [progress log](progress.md) records completed stages and commit references. `firmware/README.md` contains the build instructions; [docs/testing.md](testing.md) records build, simulated-input, and hardware validation results. A successful build establishes compilation, while hardware behavior is recorded separately.
 
 ## Technical References
 

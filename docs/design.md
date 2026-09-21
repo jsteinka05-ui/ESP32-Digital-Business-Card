@@ -65,7 +65,7 @@ A single momentary button provides navigation and display recovery. The planned 
 
 The button connects GPIO6 to ground and uses the microcontroller’s internal pull-up. The input reads high when released and low when pressed.
 
-This arrangement reduces external components and keeps the interface simple. Software debouncing will prevent mechanical contact bounce from generating unintended actions.
+This arrangement reduces external components and keeps the interface simple. The implemented input module requires 30 ms of unchanged input before accepting a transition. It samples approximately every 10 ms and measures gesture duration between accepted press and release transitions. A button held at startup must be released before a new gesture can be tracked.
 
 ### LCD Power Switch
 

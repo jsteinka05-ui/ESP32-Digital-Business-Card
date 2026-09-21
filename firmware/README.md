@@ -4,12 +4,19 @@ Minimal C firmware for the Seeed Studio XIAO ESP32-C3, developed with ESP-IDF v6
 
 ## Current Behavior
 
-The button module configures GPIO6 as an input with an internal pull-up. The application samples it approximately every 10 ms and logs changes over the USB serial console:
+The button module configures GPIO6 as an input with an internal pull-up. The application samples it approximately every 10 ms and accepts transitions after 30 ms of stable input.
 
-- `Status: 1`: pressed.
-- `Status: 0`: released.
+| Serial message | Meaning |
+|---|---|
+| `Button input ready` | GPIO initialization succeeded |
+| `Button pressed` | A press passed the debounce interval |
+| `Short press released` | A tracked press lasted less than 900 ms |
+| `Long press released` | A tracked press lasted at least 900 ms |
+| `Button released (no tracked press)` | A button held at startup was released without generating a gesture |
 
-The initial reading establishes the previous state without printing. Inputs are raw; debouncing and short/long-press classification are not implemented yet. The display and sleep features are later stages.
+Durations are measured between accepted press and release transitions. A tracked release emits the short or long event instead of a separate release event. Holding never repeatedly emits a gesture. The first reading establishes state without generating a button event.
+
+The button module returns events; the application currently logs them. Display navigation, LCD recovery, and sleep behavior are later stages.
 
 ## Build, Flash, and Monitor
 
@@ -28,8 +35,8 @@ The project selects the ESP32-C3 target. `sdkconfig.defaults` specifies 4 MB fla
 
 - `main/main.c`: initialization, polling, and transition logging.
 - `main/button.h`: public button interface.
-- `main/button.c`: GPIO configuration and raw pressed-state reading.
+- `main/button.c`: GPIO configuration, raw readings, debouncing, and gesture classification.
 
 ## Validation
 
-The earlier counter exercise was built, flashed, and observed over serial. The raw button checkpoint was tested on the assembled board: press/release changes were reported as expected, without repeated messages while held or idle. Debounce and timing boundary validation belong to the remaining F2 checkpoints.
+The firmware builds with ESP-IDF v6.1. Simulated tests cover debounce timing, contact bounce, the 899/900/901 ms classification boundary, long holds, startup-held input, and reinitialization. Expected operation after flashing has been verified on the assembled board. See the [validation record](../docs/testing.md) for scope and results.
