@@ -3,6 +3,7 @@
 
 #include "esp_err.h"
 #include <stdint.h>
+#include <stddef.h>
 
 #define ILI9488_WIDTH 320
 #define ILI9488_HEIGHT 480
@@ -22,6 +23,11 @@ esp_err_t ili9488_fill_rect(int x, int y, int width, int height,
 
 // Fill the entire panel with one color.
 esp_err_t ili9488_fill_screen(uint8_t red, uint8_t green, uint8_t blue);
+
+// Draw packed RGB888 rows from flash or RAM through the shared row buffer
+// Length must match width times height times three with no padding
+esp_err_t ili9488_draw_rgb888(int x, int y, int width, int height,
+                            const uint8_t *pixels, size_t length);
 
 // Display calls are synchronous and must all come from the same task.
 

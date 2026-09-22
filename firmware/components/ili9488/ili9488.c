@@ -237,7 +237,7 @@ esp_err_t ili9488_panel_init(void)
     return ESP_OK;
 }
 
-static esp_err_t set_address_window(int x, int y, int width, int height)
+static esp_err_t check_bounds(int x, int y, int width, int height)
 {
     // Check origin first so the size checks cannot overflow
     if (x < 0 || y < 0 || x >= ILI9488_WIDTH || y >= ILI9488_HEIGHT ||
@@ -246,6 +246,15 @@ static esp_err_t set_address_window(int x, int y, int width, int height)
     }
     if (width > ILI9488_WIDTH - x || height > ILI9488_HEIGHT - y) {
         return ESP_ERR_INVALID_ARG;
+    }
+    return ESP_OK;
+}
+
+static esp_err_t set_address_window(int x, int y, int width, int height)
+{
+    esp_err_t result = check_bounds(x, y, width, height);
+    if (result != ESP_OK) {
+        return result;
     }
     if (!panel_ready) {
         return ESP_ERR_INVALID_STATE;
@@ -257,7 +266,7 @@ static esp_err_t set_address_window(int x, int y, int width, int height)
     // Panel addresses use inclusive endpoints, high byte first
     uint8_t columns[4] = { x >> 8, x & 0xFF, x_end >> 8, x_end & 0xFF };
     uint8_t pages[4] = { y >> 8, y & 0xFF, y_end >> 8, y_end & 0xFF };
-    esp_err_t result = write_command_data(CASET, columns, sizeof(columns));
+    result = write_command_data(CASET, columns, sizeof(columns));
     if (result != ESP_OK) {
         return result;
     }
@@ -296,4 +305,35 @@ esp_err_t ili9488_fill_rect(int x, int y, int width, int height,
 esp_err_t ili9488_fill_screen(uint8_t red, uint8_t green, uint8_t blue)
 {
     return ili9488_fill_rect(0, 0, ILI9488_WIDTH, ILI9488_HEIGHT, red, green, blue);
+}
+
+esp_err_t ili9488_draw_rgb888(int x, int y, int width, int height,
+                            const uint8_t *pixels, size_t length)
+{
+    // Check dimensions before multiplying or sending any commands
+    esp_err_t result = check_bounds(x, y, width, height);
+    if (result != ESP_OK || pixels == NULL) {
+        return ESP_ERR_INVALID_ARG;
+    }
+    size_t row_bytes = (size_t)width * 3;
+    if (length != row_bytes * (size_t)height) {
+        return ESP_ERR_INVALID_SIZE;
+    }
+    result = set_address_window(x, y, width, height);
+    if (result != ESP_OK) {
+        return result;
+    }
+
+    for (int row = 0; row < height; row++) {
+        // Leave the flash image unchanged and mask only the outgoing row
+        const uint8_t *source = pixels + (size_t)row * row_bytes;
+        for (size_t byte = 0; byte < row_bytes; byte++) {
+            row_buffer[byte] = source[byte] & 0xFC;
+        }
+        result = write_data(row_buffer, row_bytes);
+        if (result != ESP_OK) {
+            return result;
+        }
+    }
+    return ESP_OK;
 }

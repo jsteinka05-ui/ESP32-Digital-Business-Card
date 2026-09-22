@@ -1,0 +1,10 @@
+menu "Business card"
+
+    config BUSINESS_CARD_DISPLAY_DIAGNOSTICS
+        bool "Run display diagnostics before showing slides"
+        default n
+        help
+            Run the color fills and drawing checks before the first slide.
+            Leave the final pattern visible for five seconds.
+
+endmenu

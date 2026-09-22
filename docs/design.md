@@ -166,7 +166,9 @@ Assets will use RGB888 storage: one byte each for red, green, and blue. The disp
 
 One complete image exceeds the microcontroller’s total internal SRAM capacity. The renderer will therefore stream data from flash through small reusable buffers.
 
-Image lengths and drawing bounds will be validated before transmission.
+Image lengths and drawing bounds are validated before transmission. The current renderer streams one row at a time through a shared 960-byte buffer and leaves the source image unchanged. QR recoloring uses an additional 960-byte stack row to blend a translucent white panel over the business card's gold background while preserving the black modules.
+
+Both RGB assets are embedded in the application flash image. A 2 MB factory application partition accommodates the 921,600 bytes of artwork plus firmware; the remaining space in the 4 MB flash is unallocated. OTA partitions are outside the current design.
 
 ### Orientation
 
@@ -179,7 +181,9 @@ The replacement renderer will initially retain native 320 × 480 panel coordinat
     → stream to the display
 ```
 
-Panel mirroring and color-order settings will be verified with labeled corners and distinct red, green, and blue patches.
+The converter requires exactly 480 × 320 source pixels and performs a lossless quarter-turn without resizing. Transparent artwork is composited onto white. Source PNGs and converted RGB assets are tracked together.
+
+Color fills and corner markers established the mounted orientation: blue top-left, red top-right, white bottom-left, and green bottom-right. The revised QR appearance has been confirmed on the display. Physical QR scanning remains part of acceptance testing.
 
 ### SPI Performance
 

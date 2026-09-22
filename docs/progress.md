@@ -77,11 +77,15 @@ Commit: `04a4c53`.
 - [x] Pass simulated bounce, threshold, startup-held, and reinitialization checks.
 - [x] Build with ESP-IDF v6.1 and verify expected operation after flashing the board.
 
-Validation results are recorded in [testing.md](testing.md). Display actions are the next stage; the current gesture events produce serial logs.
+Validation results are recorded in [testing.md](testing.md). This checkpoint established gesture logging before display integration.
 
 ## Step 4 : Display Driver and Diagnostics
 
 Date: 2026-09-22
+
+Commit title: `Add ILI9488 display driver and startup diagnostics`
+
+Commit: `632c107`.
 
 Status: implemented; hardware validation remaining
 
@@ -94,13 +98,35 @@ Status: implemented; hardware validation remaining
 - [ ] Verify edge drawing on the LCD.
 - [ ] Verify at least five cold starts and button logging after diagnostics.
 
+## Step 5 : Embedded Images and Slide Navigation
+
+Date: 2026-09-22
+
+Status: implemented; hardware validation remaining
+
+- [x] Add the original business-card and QR artwork with reproducible RGB assets.
+- [x] Convert 480 x 320 artwork to native 320 x 480 RGB888 without resizing.
+- [x] Embed both slides in flash and validate image lengths before drawing.
+- [x] Stream RGB666 pixels through the existing 960-byte row buffer.
+- [x] Show the business card at startup and wrap navigation on short releases.
+- [x] Retain the current slide index if a draw fails.
+- [x] Add a 2 MB application partition and optional startup diagnostics.
+- [x] Pass converter, rendering, and simulated navigation checks.
+- [x] Build with ESP-IDF v6.1, including a fresh configuration with diagnostics enabled.
+- [x] Flash the application and updated partition table with verified data hashes.
+- [x] Match the QR background to the business card and verify its translucent panel appearance on the display.
+- [ ] Verify readable artwork, correct orientation, and one slide change per short press.
+- [ ] Verify at least 20 slide changes, wraparound, and no navigation on long holds.
+- [ ] Scan the displayed QR code and confirm its destination.
+- [ ] Verify five cold starts and record draw time and heap measurements.
+
 ## Upcoming Milestones
 
 | Step | Scope | Status |
 |---|---|---|
 | 3 | Button input, debouncing, and press classification | Complete |
 | 4 | Display initialization, drawing, and orientation | Implemented; hardware validation remaining |
-| 5 | Embedded images and slide navigation | Planned |
+| 5 | Embedded images and slide navigation | Implemented; hardware validation remaining |
 | 6 | LCD recovery and incremental animated transitions | Planned |
 | 7 | Inactivity timeout, light sleep, and button wake-up | Planned |
 | 8 | Reproducible builds, measurements, and release validation | Planned |

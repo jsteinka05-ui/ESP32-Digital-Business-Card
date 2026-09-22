@@ -8,7 +8,7 @@ The device is designed to display personal contact information and a LinkedIn QR
 
 A working physical prototype, custom PCB assembly, wiring, and 3D-printed enclosure are complete. Current development focuses on the firmware rewrite and a new inactivity sleep feature.
 
-The physical prototype predates this repository. The C firmware rewrite now includes a minimal ESP-IDF v6.1 application that builds, flashes, and polls GPIO6 approximately every 10 ms on the ESP32-C3, debounces input over 30 ms, and classifies short and long presses on release. The display driver and startup diagnostics are implemented and build successfully; the color sequence and mounted corner positions have been verified. Edge rendering and repeated cold starts remain to be checked. Slide navigation and sleep support are upcoming stages.
+The physical prototype predates this repository. The C firmware rewrite now includes a minimal ESP-IDF v6.1 application that builds, flashes, and polls GPIO6 approximately every 10 ms on the ESP32-C3, debounces input over 30 ms, and classifies short and long presses on release. The display driver and startup diagnostics are implemented and build successfully; the color sequence and mounted corner positions have been verified. Edge rendering and repeated cold starts remain to be checked. Embedded artwork and short-press slide navigation are now implemented and build successfully; the revised QR appearance has been confirmed on the display. Repeated navigation, QR scanning, and restart testing remain open. LCD recovery, animation, and sleep support are upcoming stages.
 
 Hardware design files and printable enclosure models are available under [hardware/](hardware/README.md).
 
@@ -79,9 +79,9 @@ The intended development environment is:
 - VS Code with Espressif’s ESP-IDF extension.
 - ESP-IDF with the ESP32-C3 target and its toolchain.
 - A USB data connection to the XIAO ESP32-C3.
-- Python for image-conversion tooling when added.
+- Python with Pillow for artwork conversion; the saved RGB assets allow firmware builds without Pillow.
 
-Firmware development takes place under `firmware/`. The application now runs on the board with debounced button input and gesture logging; the [progress log](docs/progress.md) tracks the remaining F1 checks and upcoming stages.
+Firmware development takes place under `firmware/`. The application includes debounced input, streamed image drawing, and slide navigation. The [progress log](docs/progress.md) distinguishes implemented features from verified hardware behavior.
 
 ## Roadmap
 
