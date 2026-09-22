@@ -8,7 +8,7 @@ The device is designed to display personal contact information and a LinkedIn QR
 
 A working physical prototype, custom PCB assembly, wiring, and 3D-printed enclosure are complete. Current development focuses on the firmware rewrite and a new inactivity sleep feature.
 
-The physical prototype predates this repository. The C firmware rewrite now includes a minimal ESP-IDF v6.1 application that builds, flashes, and polls GPIO6 approximately every 10 ms on the ESP32-C3, debounces input over 30 ms, and classifies short and long presses on release. Display operation and sleep support are upcoming firmware stages.
+The physical prototype predates this repository. The C firmware rewrite now includes a minimal ESP-IDF v6.1 application that builds, flashes, and polls GPIO6 approximately every 10 ms on the ESP32-C3, debounces input over 30 ms, and classifies short and long presses on release. The display driver and startup diagnostics are implemented and build successfully; the color sequence and mounted corner positions have been verified. Edge rendering and repeated cold starts remain to be checked. Slide navigation and sleep support are upcoming stages.
 
 Hardware design files and printable enclosure models are available under [hardware/](hardware/README.md).
 

@@ -4,6 +4,8 @@ Minimal C firmware for the Seeed Studio XIAO ESP32-C3, developed with ESP-IDF v6
 
 ## Current Behavior
 
+At startup, the application initializes the LCD, runs bounds checks, displays five color fills, and leaves a corner/line pattern visible. After the startup sequence finishes, button polling begins. The color sequence and mounted corner positions have been verified. Edge rendering, repeated cold starts, and button logging after diagnostics remain to be checked.
+
 The button module configures GPIO6 as an input with an internal pull-up. The application samples it approximately every 10 ms and accepts transitions after 30 ms of stable input.
 
 | Serial message | Meaning |
@@ -36,6 +38,8 @@ The project selects the ESP32-C3 target. `sdkconfig.defaults` specifies 4 MB fla
 - `main/main.c`: initialization, polling, and transition logging.
 - `main/button.h`: public button interface.
 - `main/button.c`: GPIO configuration, raw readings, debouncing, and gesture classification.
+- `main/display_diagnostics.c`: bounds checks, color fills, and the corner pattern.
+- `components/ili9488/`: SPI transport, panel setup, and bounded drawing; see its [driver documentation](components/ili9488/README.md).
 
 ## Validation
 

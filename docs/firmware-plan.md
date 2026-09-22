@@ -2,7 +2,7 @@
 
 ## Current Progress
 
-The hardware baseline is complete: assembled PCB, wiring, enclosure, and operating prototype. The ESP-IDF v6.1 application now implements 30 ms button debouncing and release-based short/long-press classification. The firmware builds, simulated input tests pass, and operation after flashing has been verified on the board. F2 is complete; F3 introduces the display driver. The separate reset/power-cycle check from F1 remains open.
+The hardware baseline is complete: assembled PCB, wiring, enclosure, and operating prototype. The ESP-IDF v6.1 application now implements 30 ms button debouncing and release-based short/long-press classification. The firmware builds, simulated input tests pass, and operation after flashing has been verified on the board. F2 is complete. F3 display code and diagnostics are implemented and build successfully; the color sequence and mounted corner positions have been verified. Edge rendering, repeated cold starts, and button logging after diagnostics remain to be checked. The separate reset/power-cycle check from F1 remains open.
 
 Development proceeds through seven firmware stages. Each stage produces a working increment, validation evidence, and a focused commit. Firmware stage F1 corresponds to Step 2 in the [progress log](progress.md); Step 1 records the hardware and repository baseline.
 
@@ -12,7 +12,7 @@ Development proceeds through seven firmware stages. Each stage produces a workin
 |---|---|---|---|---|
 | F1 | 2 | Minimal ESP-IDF application | Builds for ESP32-C3, logs periodically, and restarts correctly | Core working; final checks remaining |
 | F2 | 3 | Button input and gesture events | Debounced short/long events occur once per gesture, classified on release | Complete |
-| F3 | 4 | Display driver and bounded drawing | Repeated startup, color fills, corner markers, and rectangle bounds pass | Planned |
+| F3 | 4 | Display driver and bounded drawing | Repeated startup, color fills, corner markers, and rectangle bounds pass | Implemented; hardware validation remaining |
 | F4 | 5 | Embedded images and slide navigation | Two correctly oriented slides cycle reliably and the displayed QR scans | Planned |
 | F5 | 6 | LCD recovery and incremental animation | Recovery preserves the slide; transitions maintain input tracking | Planned |
 | F6 | 7 | Inactivity and light sleep | A 300-second timeout enters sleep; button wake restores the slide without navigation | Planned |

@@ -65,7 +65,9 @@ Date: 2026-09-21
 
 Status: complete
 
-Proposed commit title: `Add button debouncing and release-based gesture detection`
+Commit title: `Add button debouncing and release-based gesture detection`
+
+Commit: `04a4c53`.
 
 - [x] Accept press and release transitions after 30 ms of stable input.
 - [x] Classify presses shorter than 900 ms as short and presses of at least 900 ms as long.
@@ -77,12 +79,27 @@ Proposed commit title: `Add button debouncing and release-based gesture detectio
 
 Validation results are recorded in [testing.md](testing.md). Display actions are the next stage; the current gesture events produce serial logs.
 
+## Step 4 : Display Driver and Diagnostics
+
+Date: 2026-09-22
+
+Status: implemented; hardware validation remaining
+
+- [x] Configure SPI2 and LCD control pins as a separate component.
+- [x] Separate bus setup from repeatable panel initialization.
+- [x] Implement RGB666 color fills and bounded rectangle drawing.
+- [x] Add startup color, corner, line, and invalid-coordinate diagnostics.
+- [x] Build successfully and pass simulated transfer/error-path checks.
+- [x] Verify the color sequence and record physical corner positions: blue top-left, red top-right, white bottom-left, green bottom-right.
+- [ ] Verify edge drawing on the LCD.
+- [ ] Verify at least five cold starts and button logging after diagnostics.
+
 ## Upcoming Milestones
 
 | Step | Scope | Status |
 |---|---|---|
 | 3 | Button input, debouncing, and press classification | Complete |
-| 4 | Display initialization, drawing, and orientation | Planned |
+| 4 | Display initialization, drawing, and orientation | Implemented; hardware validation remaining |
 | 5 | Embedded images and slide navigation | Planned |
 | 6 | LCD recovery and incremental animated transitions | Planned |
 | 7 | Inactivity timeout, light sleep, and button wake-up | Planned |

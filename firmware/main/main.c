@@ -3,6 +3,8 @@
 #include "esp_log.h"
 #include "esp_timer.h"
 #include "button.h"
+#include "ili9488.h"
+#include "display_diagnostics.h"
 
 void app_main(void)
 {
@@ -10,6 +12,20 @@ void app_main(void)
     ESP_ERROR_CHECK(button_init());
     ESP_LOGI(TAG, "Button input ready");
 
+    // Set up the SPI connection before the panel
+    ESP_ERROR_CHECK(ili9488_bus_init());
+    // Drawing must be rejected until the panel is initialized
+    if (ili9488_fill_rect(0, 0, 1, 1, 0, 0, 0) != ESP_ERR_INVALID_STATE) {
+        ESP_LOGE(TAG, "Uninitialized drawing check failed");
+        ESP_ERROR_CHECK(ESP_FAIL);
+    }
+    ESP_ERROR_CHECK(ili9488_panel_init());
+    ESP_LOGI(TAG, "LCD ready");
+    // Run the display checks once and leave the pattern visible
+    ESP_ERROR_CHECK(display_diagnostics_run());
+    ESP_LOGI(TAG, "Button monitoring active");
+
+    // Resume button sampling after display startup finishes
     while (true) {
         bool raw_pressed = button_is_pressed();
         button_event_t event = button_update(raw_pressed, esp_timer_get_time());
