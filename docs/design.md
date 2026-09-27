@@ -6,7 +6,7 @@ This project is a standalone digital business card built around a Seeed Studio X
 
 This document defines the architecture, intended behavior, and acceptance criteria for the firmware rewrite in C using ESP-IDF. The rewrite will preserve the device’s slide display, button navigation, animated transitions, and LCD recovery behavior while improving software organization and validation.
 
-A five-minute inactivity timeout with low-power idle and button wake-up is a planned addition. Its implementation will include evaluating display sleep, backlight control, and processor sleep modes.
+A five-minute inactivity timeout uses display sleep and ordinary ESP32-C3 light sleep with GPIO6 button wake. The implementation passes software checks; hardware sleep/wake validation and current measurements remain open. The directly powered backlight stays on.
 
 The physical prototype, wiring, and custom PCB assembly are complete. This specification covers the replacement firmware and the planned low-power feature.
 
@@ -183,7 +183,7 @@ The replacement renderer will initially retain native 320 × 480 panel coordinat
 
 The converter requires exactly 480 × 320 source pixels and performs a lossless quarter-turn without resizing. Transparent artwork is composited onto white. Source PNGs and converted RGB assets are tracked together.
 
-Color fills and corner markers established the mounted orientation: blue top-left, red top-right, white bottom-left, and green bottom-right. The revised QR appearance has been confirmed on the display. Physical QR scanning remains part of acceptance testing.
+Color fills and corner markers established the mounted orientation: blue top-left, red top-right, white bottom-left, and green bottom-right. The revised QR appearance has been confirmed on the display. Physical QR scanning passed after transition and recovery testing.
 
 ### SPI Performance
 
@@ -230,11 +230,15 @@ Each long press must produce exactly one recovery action and no navigation actio
 
 Button input during an animation will update inactivity tracking but will not queue additional slide changes.
 
-A gesture beginning during an animation must be released before another navigation gesture is accepted. This avoids unexpected actions when the animation finishes.
+A gesture beginning during an animation must be released before another navigation gesture is accepted. This avoids unexpected actions when the animation finishes. The controller requires 30 ms of released input after drawing before rearming, including for a press first sampled just after the final animation step.
+
+Transitions wipe eight native rows per step, then reveal at most sixteen shuffled 8 × 8 tiles per step. The 2,400-entry ordering array uses 4,800 bytes and is reused for each transition. A 192-byte tile buffer obtains the same composed pixels used by full-screen drawing. Each step is eligible after 10 ms and returns to input sampling without catching up on missed steps. Actual loop timing is measured on the board.
+
+The current slide index changes only after successful completion. A failed transfer stops the transition and preserves the previous selection for recovery. Startup and recovery still use synchronous full-screen drawing; gestures during panel reset and redraw are not queued.
 
 ## Low-Power Idle State
 
-Low-power idle is a planned addition to the firmware rewrite.
+Low-power idle is implemented with a separate power manager and serialized display operations.
 
 ### Inactivity Detection
 
@@ -252,13 +256,13 @@ Sleep entry will be deferred while:
 
 When the inactivity timeout expires, the application will:
 
-1. Complete any active display operation.
+1. Wait until rendering has finished and the button is stably released.
 2. Preserve the current slide selection.
-3. Place the display into an appropriate low-power condition.
-4. Disable the backlight if supported by the hardware.
-5. Enter an appropriate ESP32-C3 sleep mode with button wake-up enabled.
+3. Send ILI9488 display-off (`0x28`) and sleep-in (`0x10`).
+4. Continue polling for 120 ms while the panel settles.
+5. Enter ordinary ESP32-C3 light sleep with low-level GPIO6 wake enabled.
 
-The display commands and processor sleep mode will be selected during implementation and verified on the assembled device.
+A press during settling cancels entry and restores the selected slide. The GPIO pull-up remains active during sleep. Wake, cancellation, or a rejected sleep attempt triggers panel reinitialization and redraw through the existing SPI bus. Restoration restarts the inactivity interval, including after an error, to avoid continuous retries. Hardware validation remains open.
 
 ### Backlight Control
 
@@ -280,9 +284,9 @@ The application will wait for a stable release before accepting another gesture 
 
 Ordinary light sleep is the initial approach because it retains application state and supports the existing GPIO6 button with the GPIO peripheral powered.
 
-ESP32-C3 GPIO wake from deep sleep is limited to GPIO0–5. GPIO6 therefore does not support the planned button wake in deep sleep. Peripheral power-down light-sleep configurations have the same restricted wake-pin requirement and are outside the initial implementation.
+ESP32-C3 GPIO wake from deep sleep is limited to GPIO0–5. GPIO6 therefore does not support this button wake in deep sleep. Peripheral power-down light-sleep configurations have the same restricted wake-pin requirement and are outside the initial implementation.
 
-The implementation will evaluate ordinary light-sleep consumption, panel restoration, and wake latency on the assembled board. See [ESP-IDF sleep modes](https://docs.espressif.com/projects/esp-idf/en/v6.0.1/esp32c3/api-reference/system/sleep_modes.html) and the [ESP32-C3 GPIO capability definitions](https://github.com/espressif/esp-idf/blob/v6.0.1/components/soc/esp32c3/include/soc/soc_caps.h).
+The implementation will evaluate ordinary light-sleep consumption, panel restoration, and wake latency on the assembled board. See [ESP-IDF sleep modes](https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32c3/api-reference/system/sleep_modes.html) and the [ESP32-C3 GPIO capability definitions](https://github.com/espressif/esp-idf/blob/v6.1/components/soc/esp32c3/include/soc/soc_caps.h).
 
 Active current, idle current, and wake-up latency are the power-management performance metrics.
 

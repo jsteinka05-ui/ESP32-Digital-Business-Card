@@ -8,7 +8,7 @@ The device is designed to display personal contact information and a LinkedIn QR
 
 A working physical prototype, custom PCB assembly, wiring, and 3D-printed enclosure are complete. Current development focuses on the firmware rewrite and a new inactivity sleep feature.
 
-The physical prototype predates this repository. The C firmware rewrite now includes a minimal ESP-IDF v6.1 application that builds, flashes, and polls GPIO6 approximately every 10 ms on the ESP32-C3, debounces input over 30 ms, and classifies short and long presses on release. The display driver and startup diagnostics are implemented and build successfully; the color sequence and mounted corner positions have been verified. Edge rendering and repeated cold starts remain to be checked. Embedded artwork and short-press slide navigation are now implemented and build successfully; the revised QR appearance has been confirmed on the display. Repeated navigation, QR scanning, and restart testing remain open. LCD recovery, animation, and sleep support are upcoming stages.
+The physical prototype predates this repository. The C firmware rewrite now includes a minimal ESP-IDF v6.1 application that builds, flashes, and polls GPIO6 approximately every 10 ms on the ESP32-C3, debounces input over 30 ms, and classifies short and long presses on release. The display driver and startup diagnostics are implemented and build successfully; the color sequence and mounted corner positions have been verified. Edge rendering and repeated cold starts remain to be checked. Embedded artwork and short-press slide navigation are now implemented and build successfully; the revised QR appearance has been confirmed on the display. Repeated navigation and QR scanning have passed hardware checks; restart testing remains open. Long-press LCD recovery and incremental wipe/tile transitions pass software and hardware checks, including gesture suppression and timing checks. Five-minute inactivity sleep and GPIO6 wake are implemented and pass software checks; on-board sleep/wake validation and power measurements remain open.
 
 Hardware design files and printable enclosure models are available under [hardware/](hardware/README.md).
 
@@ -43,7 +43,7 @@ See the [design document](docs/design.md) for component rationale, wiring, memor
 
 ## Intended Controls
 
-The firmware rewrite targets the following controls, including the planned sleep and wake behavior:
+The firmware rewrite targets the following controls, including sleep and wake behavior:
 
 | Input or condition | Intended behavior |
 |---|---|
@@ -91,9 +91,10 @@ Firmware development takes place under `firmware/`. The application includes deb
 - [x] Organize KiCad files, manufacturing exports, and enclosure models.
 - [x] Implement startup logging and debounced button input.
 - [ ] Initialize the display and verify drawing, colors, and orientation.
-- [ ] Display embedded slides and implement navigation.
-- [ ] Add LCD recovery and animated transitions.
-- [ ] Implement and measure inactivity sleep and button wake-up.
+- [x] Display embedded slides and implement navigation.
+- [x] Add LCD recovery and animated transitions.
+- [x] Implement inactivity sleep and button wake-up.
+- [ ] Verify sleep/wake on hardware and measure current consumption.
 - [ ] Publish build instructions, test results, and a device demonstration.
 
 ## Documentation

@@ -51,33 +51,63 @@ esp_err_t slides_validate(void)
     return ESP_OK;
 }
 
-static esp_err_t draw_qr_slide(const slide_t *slide)
+esp_err_t slides_read_region(size_t index, int x, int y, int width, int height,
+                            uint8_t *pixels, size_t length)
 {
-    size_t expected_length = (size_t)ILI9488_WIDTH * ILI9488_HEIGHT * 3;
-    if (image_length(slide) != expected_length) {
+    // Validate before multiplying sizes or reading image bytes
+    if (index >= slides_count() || pixels == NULL || x < 0 || y < 0 ||
+        x >= ILI9488_WIDTH || y >= ILI9488_HEIGHT || width <= 0 || height <= 0) {
+        return ESP_ERR_INVALID_ARG;
+    }
+    if (width > ILI9488_WIDTH - x || height > ILI9488_HEIGHT - y) {
+        return ESP_ERR_INVALID_ARG;
+    }
+    if (length != (size_t)width * height * 3) {
         return ESP_ERR_INVALID_SIZE;
     }
+    esp_err_t result = slides_validate();
+    if (result != ESP_OK) {
+        return result;
+    }
 
-    // Match the plain gold at the corner of the business card
+    const slide_t *slide = &slides[index];
     const uint8_t *background = business_card_start;
-    uint8_t row_pixels[ILI9488_WIDTH * 3];
-    for (int y = 0; y < ILI9488_HEIGHT; y++) {
-        for (int x = 0; x < ILI9488_WIDTH; x++) {
-            size_t source_offset = ((size_t)y * ILI9488_WIDTH + x) * 3;
-            // QR panel bounds in the rotated native image
-            bool inside_panel = x >= 25 && x < 295 && y >= 105 && y < 375;
+    for (int row = 0; row < height; row++) {
+        for (int column = 0; column < width; column++) {
+            int source_x = x + column;
+            int source_y = y + row;
+            size_t source_offset = ((size_t)source_y * ILI9488_WIDTH + source_x) * 3;
+            size_t destination = ((size_t)row * width + column) * 3;
+            bool inside_panel = source_x >= 25 && source_x < 295 &&
+                                source_y >= 105 && source_y < 375;
             for (int channel = 0; channel < 3; channel++) {
-                uint8_t color = background[channel];
-                if (inside_panel) {
-                    // Blend white at 25 percent then retain the original QR pattern
-                    uint8_t panel = (3 * background[channel] + 255) / 4;
-                    color = (uint16_t)slide->start[source_offset + channel] * panel / 255;
+                uint8_t color = slide->start[source_offset + channel];
+                if (index == 1) {
+                    color = background[channel];
+                    if (inside_panel) {
+                        // Use the same gold and translucent white panel
+                        uint8_t panel = (3 * background[channel] + 255) / 4;
+                        color = (uint16_t)slide->start[source_offset + channel] * panel / 255;
+                    }
                 }
-                row_pixels[x * 3 + channel] = color;
+                pixels[destination + channel] = color;
             }
         }
-        esp_err_t result = ili9488_draw_rgb888(0, y, ILI9488_WIDTH, 1,
+    }
+    return ESP_OK;
+}
+
+static esp_err_t draw_qr_slide(size_t index)
+{
+    uint8_t row_pixels[ILI9488_WIDTH * 3];
+    for (int y = 0; y < ILI9488_HEIGHT; y++) {
+        esp_err_t result = slides_read_region(index, 0, y, ILI9488_WIDTH, 1,
                                               row_pixels, sizeof(row_pixels));
+        if (result != ESP_OK) {
+            return result;
+        }
+        result = ili9488_draw_rgb888(0, y, ILI9488_WIDTH, 1,
+                                     row_pixels, sizeof(row_pixels));
         if (result != ESP_OK) {
             return result;
         }
@@ -92,7 +122,7 @@ esp_err_t slides_draw(size_t index)
     }
     const slide_t *slide = &slides[index];
     if (index == 1) {
-        return draw_qr_slide(slide);
+        return draw_qr_slide(index);
     }
     return ili9488_draw_rgb888(0, 0, ILI9488_WIDTH, ILI9488_HEIGHT,
                               slide->start, image_length(slide));
