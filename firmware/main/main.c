@@ -5,27 +5,34 @@
 #include "button.h"
 #include "ili9488.h"
 #include "display_diagnostics.h"
+#include "slides.h"
 #include "esp_system.h"
 #include "esp_heap_caps.h"
 #include "sdkconfig.h"
-#include "app_controller.h"
-#include "transitions.h"
-#include "power_manager.h"
 
 static const char *TAG = "business_card";
 
-static void log_memory(void)
+static esp_err_t show_slide(size_t index)
 {
+    int64_t started_us = esp_timer_get_time();
+    esp_err_t result = slides_draw(index);
+    if (result != ESP_OK) {
+        ESP_LOGE(TAG, "Slide draw failed: %s", esp_err_to_name(result));
+        return result;
+    }
+    // Record draw time and available memory after the transfer
+    ESP_LOGI(TAG, "Slide %u: %s, %lld ms", (unsigned)index, slides_name(index),
+             (long long)((esp_timer_get_time() - started_us) / 1000));
     ESP_LOGI(TAG, "Free heap: %lu, minimum: %lu, largest internal block: %u",
              (unsigned long)esp_get_free_heap_size(),
              (unsigned long)esp_get_minimum_free_heap_size(),
              (unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT));
+    return ESP_OK;
 }
 
 void app_main(void)
 {
     ESP_ERROR_CHECK(button_init());
-    ESP_ERROR_CHECK(power_manager_init());
     ESP_LOGI(TAG, "Button input ready");
 
     // Set up the SPI connection before the panel
@@ -42,37 +49,15 @@ void app_main(void)
     ESP_ERROR_CHECK(display_diagnostics_run());
     vTaskDelay(pdMS_TO_TICKS(5000));
 #endif
-    int64_t started_us = esp_timer_get_time();
-    ESP_ERROR_CHECK(app_controller_init(started_us));
-    app_controller_reset_activity(esp_timer_get_time());
-    ESP_LOGI(TAG, "Initial slide ready in %lld ms",
-             (long long)((esp_timer_get_time() - started_us) / 1000));
-    log_memory();
-    int64_t previous_sample_us = esp_timer_get_time();
-    int64_t transition_started_us = 0;
-    int64_t longest_gap_us = 0;
-    int64_t transition_duration_us = 0;
-    bool report_transition = false;
+    ESP_ERROR_CHECK(slides_validate());
+    size_t current_slide = 0;
+    ESP_ERROR_CHECK(show_slide(current_slide));
     ESP_LOGI(TAG, "Button monitoring active");
 
     // Resume button sampling after display startup finishes
     while (true) {
         bool raw_pressed = button_is_pressed();
-        int64_t now_us = esp_timer_get_time();
-        button_event_t event = button_update(raw_pressed, now_us);
-        bool was_active = transitions_is_active();
-        if ((was_active || report_transition) && now_us - previous_sample_us > longest_gap_us) {
-            longest_gap_us = now_us - previous_sample_us;
-        }
-        previous_sample_us = now_us;
-        if (report_transition) {
-            // Wait for this sample to include the final step and task delay
-            ESP_LOGI(TAG, "Transition ended in %lld ms, longest sampled gap %lld us",
-                     (long long)(transition_duration_us / 1000),
-                     (long long)longest_gap_us);
-            log_memory();
-            report_transition = false;
-        }
+        button_event_t event = button_update(raw_pressed, esp_timer_get_time());
 
         switch (event) {
         case BUTTON_EVENT_PRESSED:
@@ -81,9 +66,15 @@ void app_main(void)
         case BUTTON_EVENT_RELEASED:
             ESP_LOGI(TAG, "Button released (no tracked press)");
             break;
-        case BUTTON_EVENT_SHORT_PRESS:
+        case BUTTON_EVENT_SHORT_PRESS: {
             ESP_LOGI(TAG, "Short press released");
+            // Wrap after the final slide and update only after a complete draw
+            size_t next_slide = (current_slide + 1) % slides_count();
+            if (show_slide(next_slide) == ESP_OK) {
+                current_slide = next_slide;
+            }
             break;
+        }
         case BUTTON_EVENT_LONG_PRESS:
             ESP_LOGI(TAG, "Long press released");
             break;
@@ -91,17 +82,6 @@ void app_main(void)
             break;
         }
 
-        esp_err_t result = app_controller_update(event, raw_pressed, now_us);
-        if (result != ESP_OK) {
-            ESP_LOGE(TAG, "Display operation failed: %s", esp_err_to_name(result));
-        }
-        if (!was_active && transitions_is_active()) {
-            transition_started_us = now_us;
-            longest_gap_us = 0;
-        } else if (was_active && !transitions_is_active()) {
-            transition_duration_us = esp_timer_get_time() - transition_started_us;
-            report_transition = true;
-        }
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }

@@ -15,10 +15,6 @@ esp_err_t ili9488_bus_init(void);
 // Does not clear the screen. Drawing requires successful panel initialization.
 esp_err_t ili9488_panel_init(void);
 
-// Turn off the display and request panel sleep
-// Allow at least 120 ms before sleeping the MCU or reinitializing the panel
-esp_err_t ili9488_panel_sleep(void);
-
 // Fill a contained rectangle in native 320 x 480 coordinates.
 // Reject negative coordinates, nonpositive sizes, and out-of-bounds rectangles.
 // Colors are 0..255 and converted to RGB666 during transmission.

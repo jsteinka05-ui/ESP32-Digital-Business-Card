@@ -19,9 +19,7 @@ static const spi_host_device_t LCD_HOST = SPI2_HOST;
 enum {
     TRANSFER_BYTES = ILI9488_WIDTH * 3,
     SWRESET = 0x01,
-    SLPIN = 0x10,
     SLPOUT = 0x11,
-    DISPOFF = 0x28,
     DISPON = 0x29,
     CASET = 0x2A,
     PASET = 0x2B,
@@ -237,20 +235,6 @@ esp_err_t ili9488_panel_init(void)
     vTaskDelay(pdMS_TO_TICKS(120));
     panel_ready = true;
     return ESP_OK;
-}
-
-esp_err_t ili9488_panel_sleep(void)
-{
-    if (!panel_ready) {
-        return ESP_ERR_INVALID_STATE;
-    }
-    // Block drawing even if only part of the sleep sequence succeeds
-    panel_ready = false;
-    esp_err_t result = write_command(DISPOFF);
-    if (result != ESP_OK) {
-        return result;
-    }
-    return write_command(SLPIN);
 }
 
 static esp_err_t check_bounds(int x, int y, int width, int height)

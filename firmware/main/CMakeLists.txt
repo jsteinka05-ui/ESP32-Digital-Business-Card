@@ -1,7 +1,7 @@
 idf_component_register(
-    SRCS "power_manager.c" "transitions.c" "app_controller.c" "slides.c" "display_diagnostics.c" "main.c" "button.c"
+    SRCS "slides.c" "display_diagnostics.c" "main.c" "button.c"
     INCLUDE_DIRS "."
-    REQUIRES freertos log esp_timer esp_driver_gpio esp_common esp_system esp_hw_support heap ili9488
+    REQUIRES freertos log esp_timer esp_driver_gpio esp_common esp_system heap ili9488
 )
 
 # Keep image symbols independent of their source directory

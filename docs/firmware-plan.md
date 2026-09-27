@@ -2,7 +2,7 @@
 
 ## Current Progress
 
-The hardware baseline is complete: assembled PCB, wiring, enclosure, and operating prototype. The ESP-IDF v6.1 application now implements 30 ms button debouncing and release-based short/long-press classification. The firmware builds, simulated input tests pass, and operation after flashing has been verified on the board. F2 is complete. F3 display code and diagnostics are implemented and build successfully; the color sequence and mounted corner positions have been verified. Edge rendering, repeated cold starts, and button logging after diagnostics remain to be checked. F4 now embeds both slides, streams RGB pixels through a row buffer, and advances on short presses. Its software checks pass; the revised QR appearance has been confirmed on the board. Repeated navigation, QR scanning, and timing/memory checks have passed on hardware. Cold-start checks remain open. F5 implements panel recovery without rebuilding SPI, a black wipe followed by shuffled tiles, and gesture suppression until a stable release after drawing. Software and hardware checks pass, including LCD power-cycle recovery, repeated transitions, gesture suppression, QR scanning, and timing/memory checks. F5 is complete. F6 now implements the 300-second timeout, panel sleep, GPIO6 light-sleep wake, and restoration without navigation. Software checks pass; physical sleep/wake and current measurements remain open. The separate reset/power-cycle check from F1 remains open.
+The hardware baseline is complete: assembled PCB, wiring, enclosure, and operating prototype. The ESP-IDF v6.1 application now implements 30 ms button debouncing and release-based short/long-press classification. The firmware builds, simulated input tests pass, and operation after flashing has been verified on the board. F2 is complete. F3 display code and diagnostics are implemented and build successfully; the color sequence and mounted corner positions have been verified. Edge rendering, repeated cold starts, and button logging after diagnostics remain to be checked. F4 now embeds both slides, streams RGB pixels through a row buffer, and advances on short presses. Its software checks pass; the revised QR appearance has been confirmed on the board. Repeated navigation, QR scanning, cold starts, and heap measurements remain open. The separate reset/power-cycle check from F1 remains open.
 
 Development proceeds through seven firmware stages. Each stage produces a working increment, validation evidence, and a focused commit. Firmware stage F1 corresponds to Step 2 in the [progress log](progress.md); Step 1 records the hardware and repository baseline.
 
@@ -14,8 +14,8 @@ Development proceeds through seven firmware stages. Each stage produces a workin
 | F2 | 3 | Button input and gesture events | Debounced short/long events occur once per gesture, classified on release | Complete |
 | F3 | 4 | Display driver and bounded drawing | Repeated startup, color fills, corner markers, and rectangle bounds pass | Implemented; hardware validation remaining |
 | F4 | 5 | Embedded images and slide navigation | Two correctly oriented slides cycle reliably and the displayed QR scans | Implemented; hardware validation remaining |
-| F5 | 6 | LCD recovery and incremental animation | Recovery preserves the slide; transitions maintain input tracking | Complete |
-| F6 | 7 | Inactivity and light sleep | A 300-second timeout enters sleep; button wake restores the slide without navigation | Implemented; hardware validation remaining |
+| F5 | 6 | LCD recovery and incremental animation | Recovery preserves the slide; transitions maintain input tracking | Planned |
+| F6 | 7 | Inactivity and light sleep | A 300-second timeout enters sleep; button wake restores the slide without navigation | Planned |
 | F7 | 8 | Release validation | Clean-checkout build, repeatable hardware tests, and measured results | Planned |
 
 ## Implementation Approach
@@ -60,7 +60,7 @@ Evidence: independent LCD power-cycle recovery, repeated transitions, and define
 
 ## F6 — Inactivity and Sleep
 
-The inactivity state machine uses ordinary light sleep with GPIO6 wake-up and the GPIO peripheral retained. Panel settling remains nonblocking for 120 ms, allowing button input to cancel sleep entry. ESP32-C3 deep-sleep GPIO wake is limited to GPIO0–5, so it is not the initial approach for the existing button connection.
+Implement the inactivity state machine before enabling sleep. Use ordinary light sleep with GPIO6 wake-up and the GPIO peripheral retained. ESP32-C3 deep-sleep GPIO wake is limited to GPIO0–5, so it is not the initial approach for the existing button connection.
 
 The final timeout is 300 seconds. Wake consumes the entire initiating gesture and restores the current slide. Sleep is deferred during a held button, drawing, or recovery.
 

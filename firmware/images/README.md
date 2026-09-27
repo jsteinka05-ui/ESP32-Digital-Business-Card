@@ -31,4 +31,4 @@ References: [Pillow image operations](https://pillow.readthedocs.io/en/stable/re
 
 The QR slide uses the business card's corner color as its gold background. Its white panel is blended at 25 percent opacity over that gold while the black QR modules remain unchanged. This is composited into RGB pixels during drawing; the LCD does not use an alpha channel.
 
-The original QR PNG and RGB asset remain unchanged. The panel occupies landscape coordinates x=105..374 and y=25..294, corresponding to native x=25..294 and y=105..374. If the QR layout moves in replacement artwork, update these bounds in `main/slides.c`. The shared `slides_read_region` path applies the same colors to full QR rows and animation tiles.
+The original QR PNG and RGB asset remain unchanged. The panel occupies landscape coordinates x=105..374 and y=25..294, corresponding to native x=25..294 and y=105..374. If the QR layout moves in replacement artwork, update these bounds in `main/slides.c`.
