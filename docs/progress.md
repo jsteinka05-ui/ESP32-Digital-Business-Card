@@ -102,6 +102,10 @@ Status: implemented; hardware validation remaining
 
 Date: 2026-09-22
 
+Commit title: `Add embedded slides and short-press navigation`
+
+Commit: `876373f`.
+
 Status: implemented; hardware validation remaining
 
 - [x] Add the original business-card and QR artwork with reproducible RGB assets.
@@ -115,10 +119,57 @@ Status: implemented; hardware validation remaining
 - [x] Build with ESP-IDF v6.1, including a fresh configuration with diagnostics enabled.
 - [x] Flash the application and updated partition table with verified data hashes.
 - [x] Match the QR background to the business card and verify its translucent panel appearance on the display.
-- [ ] Verify readable artwork, correct orientation, and one slide change per short press.
-- [ ] Verify at least 20 slide changes, wraparound, and no navigation on long holds.
-- [ ] Scan the displayed QR code and confirm its destination.
+- [x] Verify readable artwork, correct orientation, and one slide change per short press.
+- [x] Verify at least 20 slide changes, wraparound, and no navigation on long holds.
+- [x] Scan the displayed QR code and confirm its destination.
 - [ ] Verify five cold starts and record draw time and heap measurements.
+
+## Step 6 : LCD Recovery and Transitions
+
+Date: 2026-09-22
+
+Status: complete
+
+- [x] Recover the LCD on long release without recreating the SPI bus.
+- [x] Redraw the selected slide without advancing it during recovery.
+- [x] Add incremental black wipe and shuffled 8 x 8 tile reveal.
+- [x] Preserve the QR background and translucent panel in every tile.
+- [x] Sample input between bounded animation steps and record accepted activity.
+- [x] Discard gestures during drawing and require a stable release before rearming.
+- [x] Preserve the selected slide and stop animation on transfer failure.
+- [x] Pass integrated checks with the actual button, controller, transition, and slide code.
+- [x] Verify 20 simulated transitions with complete tile coverage and expected final pixels.
+- [x] Build with ESP-IDF v6.1.
+- [x] Flash the recovery and transition firmware with verified data hashes.
+- [x] Verify LCD-only power-cycle recovery on both slides.
+- [x] Verify 20 transitions and presses held across the animation boundary on hardware.
+- [x] Check transition timing, input-sampling gaps, and heap readings on hardware.
+- [x] Confirm QR scanning after transition and recovery.
+
+## Step 7 : Inactivity Sleep and Button Wake
+
+Date: 2026-09-22
+
+Commit title: `Add LCD recovery, transitions, and inactivity sleep`
+
+Status: complete
+
+Hardware validation completed: 2026-09-27
+
+- [x] Start the 300-second timeout after drawing and reset it on accepted input.
+- [x] Defer sleep during held input, rendering, and recovery.
+- [x] Add panel sleep with 120 ms settling and input cancellation.
+- [x] Configure ordinary light sleep with GPIO6 wake and retained pull-up.
+- [x] Restore the selected slide using the existing SPI bus.
+- [x] Consume the wake gesture until a stable release.
+- [x] Restart inactivity after wake, cancellation, or failed restoration.
+- [x] Pass timeout, cancellation, error-path, and ten simulated sleep/wake cycles.
+- [x] Build with ESP-IDF v6.1 with diagnostics disabled and enabled.
+- [x] Flash the sleep/wake firmware with verified data hashes.
+- [x] Verify the full five-minute timeout on hardware.
+- [x] Verify ten sleep/wake cycles on both slides and long-held wake suppression.
+- [x] Verify sleep deferral and cancellation during button activity.
+- [x] Measure active current, idle current, and button-to-image wake latency.
 
 ## Upcoming Milestones
 
@@ -127,6 +178,6 @@ Status: implemented; hardware validation remaining
 | 3 | Button input, debouncing, and press classification | Complete |
 | 4 | Display initialization, drawing, and orientation | Implemented; hardware validation remaining |
 | 5 | Embedded images and slide navigation | Implemented; hardware validation remaining |
-| 6 | LCD recovery and incremental animated transitions | Planned |
-| 7 | Inactivity timeout, light sleep, and button wake-up | Planned |
+| 6 | LCD recovery and incremental animated transitions | Complete |
+| 7 | Inactivity timeout, light sleep, and button wake-up | Complete |
 | 8 | Reproducible builds, measurements, and release validation | Planned |

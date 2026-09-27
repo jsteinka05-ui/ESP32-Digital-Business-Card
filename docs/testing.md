@@ -118,3 +118,98 @@ Synchronous drawing pauses button polling. Complete gestures during that interva
 The QR slide now composites the original black pattern over a 25-percent white panel on the business card's gold background. Local tests check every composited row against the expected gold and black colors, slide wraparound, malformed QR asset rejection, and failures on the first and middle rows. The source images remain unchanged. The revised appearance was confirmed on the display after reflashing. Physical QR scanning remains open.
 
 The build-size measurements above include this QR update. Converter tests also verify that the original black-and-white panel retains a 24-pixel quiet border on all sides and reject multi-frame artwork.
+
+## LCD Recovery and Transitions : 2026-09-22
+
+Status: complete; software and hardware checks passed.
+
+### Build and Memory
+
+The standard ESP-IDF v6.1 build produces a 1,111,632-byte application in the existing 2,097,152-byte partition, leaving 985,520 bytes free. The linker places the 4,800-byte tile-order array in DRAM. Drawing uses a 192-byte stack tile and the existing 960-byte driver buffer. Full QR redraws retain their separate 960-byte stack row. No full-screen framebuffer is allocated in the firmware.
+
+Builds passed with startup diagnostics both disabled and enabled. The application logs initial drawing duration, transition duration, longest observed input-sampling interval, and heap readings. Timing and heap checks passed during hardware testing. This record contains pass/fail results rather than numerical readings. Panel reset, startup drawing, and recovery drawing remain synchronous.
+
+### Integrated Software Checks
+
+A local RISC-V/QEMU harness compiles the actual button, application controller, transitions, and slides modules. Synthetic raw button readings and timestamps pass through the real debounce logic. Stubbed LCD operations reconstruct output pixels and inject errors; they do not emulate electrical timing or the LCD's response to power loss. The harness remains local.
+
+| Check | Result |
+|---|---|
+| Startup image and startup-held button release behavior | Passed |
+| Invalid slide indices, region bounds, lengths, and null buffers | Passed |
+| Malformed embedded artwork rejected before drawing | Passed |
+| Twenty repeated transitions produce the expected final pixels | Passed |
+| All 2,400 tiles drawn exactly once per completed reveal | Passed |
+| QR tiles preserve the gold background, translucent panel, and black modules | Passed |
+| One wipe strip or at most sixteen tiles per update | Passed |
+| Early update does no work; delayed update does not catch up in a burst | Passed |
+| Input wholly inside animation updates activity without queuing an action | Passed |
+| A held press spanning completion is consumed until a stable release | Passed |
+| A raw press first sampled after the final step is also suppressed | Passed |
+| Long release reinitializes the panel and redraws either selected slide | Passed |
+| Recovery preserves slide selection and does not recreate the SPI bus | Passed |
+| Panel failure prevents redraw; a later recovery can succeed | Passed |
+| Wipe/tile failure stops animation without advancing the selected slide | Passed |
+| Recovery restores the selected image after a failed transition | Passed |
+| Controller reinitialization cancels unfinished animation | Passed |
+
+### Hardware Acceptance
+
+This version was flashed on COM4 on 2026-09-22. Written data hashes were verified and the board was reset. Hardware checks were confirmed successful on the assembled device:
+
+| Check | Result |
+|---|---|
+| LCD-only power-cycle recovery restores the selected slide | Passed |
+| Repeated transitions complete without residual strips or tiles | Passed |
+| Gestures during animation do not queue navigation or recovery | Passed |
+| Holds spanning animation completion are consumed until release | Passed |
+| A fresh gesture works after the release gate clears | Passed |
+| QR scanning after transition and recovery | Passed |
+| Transition timing, input-sampling gaps, and heap checks | Passed |
+
+These results cover recovery and animation. The separate cold-start checks from earlier milestones remain open.
+
+## Inactivity Sleep and Wake : 2026-09-22
+
+Status: complete; software and hardware checks passed.
+
+Software validation repeated on 2026-09-27: both ESP-IDF build configurations, power-manager and display-driver simulations, integrated navigation/recovery/sleep checks, malformed-asset rejection, and all seven image-converter tests passed.
+
+### Build and Software Checks
+
+The normal ESP-IDF v6.1 build produces a 1,121,456-byte application in the existing 2,097,152-byte partition, leaving 975,696 bytes free. Builds passed with startup diagnostics disabled and enabled. No full-screen framebuffer was added.
+
+Local RISC-V/QEMU checks exercise the actual power manager, button, controller, transition, slide, and display-driver code. Sleep and peripherals are stubbed; these checks establish state handling and command sequencing, not real power consumption, electrical wake behavior, or LCD sleep timing.
+
+| Check | Result |
+|---|---|
+| No entry at 299,999,999 us; entry begins at 300,000,000 us | Passed |
+| Accepted input extends inactivity; held input and rendering defer entry | Passed |
+| Stable raw release required before entry | Passed |
+| Display-off precedes sleep-in; drawing blocked until panel reinitialization | Passed |
+| 120 ms settling completes before processor sleep or restoration | Passed |
+| Brief raw press or accepted activity during settling cancels entry | Passed |
+| Fresh pin checks prevent entry with an already pressed button | Passed |
+| Wake configuration failures and panel command errors propagate | Passed |
+| Rejected sleep restores the panel and restarts inactivity | Passed |
+| Ten simulated wake cycles preserve selection and expected pixels across both slides | Passed |
+| Long-held wake gesture is consumed; a fresh gesture works after release | Passed |
+| Failed restoration preserves selection and permits later manual recovery | Passed |
+| Existing twenty-transition, QR composition, and recovery regressions | Passed |
+
+### Hardware Acceptance
+
+The sleep/wake firmware was flashed on COM4 on 2026-09-22. Written data hashes were verified and the board was reset. Hardware acceptance checks were confirmed complete on 2026-09-27. Current and wake-latency checks are recorded as pass/fail results; numerical readings are not included in this record.
+
+- [x] Leave each slide idle for the full 300 seconds and verify entry without a premature timeout.
+- [x] Press before timeout and confirm a fresh five-minute interval after accepted activity.
+- [x] Hold the button through timeout and confirm sleep is deferred.
+- [x] Complete at least ten sleep/wake cycles across both slides with LCD power on.
+- [x] Confirm a brief wake press restores the same slide without navigation.
+- [x] Hold the wake button longer than 900 ms and confirm release does not trigger recovery or navigation.
+- [x] Confirm a fresh short press and long-press recovery still work after waking.
+- [x] Press during the panel-settling interval and verify restoration without an extra action.
+- [x] Scan the QR after waking and check for residual or missing pixels.
+- [x] Check active current, sleeping current, and physical button-to-image wake latency under the same supply conditions.
+
+The directly powered backlight remains on. Display sleep does not disconnect its supply, and software checks do not establish a numerical power reduction. Redraw logs measure panel initialization plus rendering after sleep returns; they are not a complete wake-latency measurement.
