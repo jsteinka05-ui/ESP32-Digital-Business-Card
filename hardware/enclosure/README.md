@@ -2,6 +2,10 @@
 
 The working prototype uses a 3D-printed enclosure with separate top, bottom, and button pieces. The models are provided as STL meshes.
 
+<img src="../../docs/media/enclosure-parts.jpeg" alt="Yellow bottom case, black screen bezel, separate button piece, and powered display assembly" width="760">
+
+The enclosure disassembled: bottom case, screen bezel, button piece, and powered display assembly.
+
 ## Models
 
 | File | Part |

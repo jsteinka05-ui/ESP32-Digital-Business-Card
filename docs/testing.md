@@ -199,7 +199,7 @@ Local RISC-V/QEMU checks exercise the actual power manager, button, controller, 
 
 ### Hardware Acceptance
 
-The sleep/wake firmware was flashed on COM4 on 2026-09-22. Written data hashes were verified and the board was reset. Hardware acceptance checks were confirmed complete on 2026-09-27. Current and wake-latency checks are recorded as pass/fail results; numerical readings are not included in this record.
+The sleep/wake firmware was flashed on COM4 on 2026-09-22. Written data hashes were verified and the board was reset. Hardware acceptance checks were confirmed complete on 2026-09-27. Functional sleep/wake checks are complete. Current consumption and physical wake latency are outside this release's measurement scope.
 
 - [x] Leave each slide idle for the full 300 seconds and verify entry without a premature timeout.
 - [x] Press before timeout and confirm a fresh five-minute interval after accepted activity.
@@ -210,6 +210,28 @@ The sleep/wake firmware was flashed on COM4 on 2026-09-22. Written data hashes w
 - [x] Confirm a fresh short press and long-press recovery still work after waking.
 - [x] Press during the panel-settling interval and verify restoration without an extra action.
 - [x] Scan the QR after waking and check for residual or missing pixels.
-- [x] Check active current, sleeping current, and physical button-to-image wake latency under the same supply conditions.
 
 The directly powered backlight remains on. Display sleep does not disconnect its supply, and software checks do not establish a numerical power reduction. Redraw logs measure panel initialization plus rendering after sleep returns; they are not a complete wake-latency measurement.
+
+## Release Validation : 2026-09-27
+
+All remaining functional hardware checks are confirmed complete, including reset and USB power-cycle behavior, five cold starts, display-edge rendering, and button operation after diagnostics. This supersedes earlier pending functional hardware entries. The clean-checkout build workflow is also confirmed complete. Timing and heap results are recorded below. Device media is included in the project and hardware documentation. Current consumption and physical wake latency are outside this release's measurement scope.
+
+## Recorded Timing and Memory : 2026-09-27
+
+Device: assembled XIAO ESP32-C3 card, USB connected to the host PC, ESP-IDF v6.1, normal display configuration with startup diagnostics disabled. Supply voltage was not measured. Five USB-triggered resets were followed by twenty manually triggered short-press transitions, allowing each animation to finish before the next press. These resets are not supply power cycles.
+
+The firmware source corresponds to `fe8d997`. The existing flashed build reports `876373f-dirty` because it was compiled before that source was committed. Its logged ELF hash prefix matches the local ELF SHA-256 `7b347ccf140ae9c73c867ccd0ec7c1dc2d91cb9715d84b2629d5b310d8041b46`.
+
+| Measurement | Samples | Result |
+|---|---|---|
+| Initial slide drawing | 5 resets | 238 ms on every run |
+| Transition duration | 20 transitions | 2604.8 ms average; 2556–2676 ms range |
+| Largest logged input-sampling gap during transitions | 20 transitions | 10004 us |
+| Free heap after startup and completed transitions | 5 startup + 20 transition readings | 315,072 bytes at every reading |
+| Minimum-ever free heap at those readings | Same samples | 315,072 bytes |
+| Largest free internal allocation block | Same samples | 180,224 bytes |
+
+Initial drawing time excludes earlier boot and panel initialization. Transition durations include the scheduled animation delays and drawing work. Sampling-gap results describe this run rather than a guaranteed worst-case bound. Unchanged heap readings show no observed growth in allocated heap during this test; they do not prove the absence of every memory defect. The captured logs contain no reported operation failures.
+
+Whole-device current, supply voltage, and physical button-to-image wake latency were not measured by this serial capture. Raw captures and collection scripts are retained locally.

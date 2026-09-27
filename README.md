@@ -4,22 +4,25 @@ A standalone digital business card built around a **Seeed Studio XIAO ESP32-C3**
 
 The device is designed to display personal contact information and a LinkedIn QR code, with a single button for slide navigation, display recovery, and wake-up.
 
+<img src="docs/media/assembled-card.jpeg" alt="Assembled digital business card displaying contact information in its printed enclosure" width="520">
+
+[Watch the device demonstration](docs/media/device-demo.mp4) — slide transitions, LCD power switching, and display recovery.
+
 ## Project Status
 
-A working physical prototype, custom PCB assembly, wiring, and 3D-printed enclosure are complete. Current development focuses on the firmware rewrite and a new inactivity sleep feature.
+The custom PCB assembly, wiring, printed enclosure, and C firmware rewrite are complete. The ESP-IDF v6.1 firmware supports debounced button input, embedded slides, animated navigation, LCD recovery, and five-minute inactivity sleep with button wake.
 
-The physical prototype predates this repository. The C firmware rewrite now includes a minimal ESP-IDF v6.1 application that builds, flashes, and polls GPIO6 approximately every 10 ms on the ESP32-C3, debounces input over 30 ms, and classifies short and long presses on release. The display driver and startup diagnostics are implemented and build successfully; the color sequence and mounted corner positions have been verified. Edge rendering and repeated cold starts remain to be checked. Embedded artwork and short-press slide navigation are now implemented and build successfully; the revised QR appearance has been confirmed on the display. Repeated navigation and QR scanning have passed hardware checks; restart testing remains open. Long-press LCD recovery and incremental wipe/tile transitions pass software and hardware checks, including gesture suppression and timing checks. Five-minute inactivity sleep and GPIO6 wake pass software and hardware checks, including repeated wake cycles, gesture suppression, current, and wake latency.
+Functional hardware checks and a clean-checkout build are complete. Recorded results include five startup draws at 238 ms each and twenty transitions averaging 2,604.75 ms, with unchanged sampled free heap. See the [validation record](docs/testing.md) for methods and limits. Current consumption and physical wake latency are outside this release's measurement scope.
 
 Hardware design files and printable enclosure models are available under [hardware/](hardware/README.md).
 
-## Existing Prototype Features
+## Features
 
 - Business-card and LinkedIn QR-code slides.
 - Standalone operation with images embedded in firmware; no network connection or SD card required.
 - Animated transitions controlled by a physical button.
 - Long-press recovery after the LCD is power-cycled independently of the microcontroller.
 
-## Planned Additions
 
 - Low-power idle after five minutes without button input.
 - Button wake-up that restores the current slide without advancing it.
@@ -76,7 +79,7 @@ docs/                     Design decisions and testing documentation
 
 The intended development environment is:
 
-- VS Code with Espressif’s ESP-IDF extension.
+- VS Code with Espressifâ€™s ESP-IDF extension.
 - ESP-IDF with the ESP32-C3 target and its toolchain.
 - A USB data connection to the XIAO ESP32-C3.
 - Python with Pillow for artwork conversion; the saved RGB assets allow firmware builds without Pillow.
@@ -90,12 +93,12 @@ Firmware development takes place under `firmware/`. The application includes deb
 - [x] Complete prototype wiring, custom PCB assembly, and printed enclosure.
 - [x] Organize KiCad files, manufacturing exports, and enclosure models.
 - [x] Implement startup logging and debounced button input.
-- [ ] Initialize the display and verify drawing, colors, and orientation.
+- [x] Initialize the display and verify drawing, colors, and orientation.
 - [x] Display embedded slides and implement navigation.
 - [x] Add LCD recovery and animated transitions.
 - [x] Implement inactivity sleep and button wake-up.
-- [x] Verify sleep/wake on hardware and measure current consumption.
-- [ ] Publish build instructions, test results, and a device demonstration.
+- [x] Verify sleep/wake on hardware.
+- [x] Publish build instructions, test results, and a device demonstration.
 
 ## Documentation
 

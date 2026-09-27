@@ -6,7 +6,7 @@ This project is a standalone digital business card built around a Seeed Studio X
 
 This document defines the architecture, intended behavior, and acceptance criteria for the firmware rewrite in C using ESP-IDF. The rewrite will preserve the device’s slide display, button navigation, animated transitions, and LCD recovery behavior while improving software organization and validation.
 
-A five-minute inactivity timeout uses display sleep and ordinary ESP32-C3 light sleep with GPIO6 button wake. The implementation passes software and hardware checks, including sleep/wake behavior, current, and wake latency. The directly powered backlight stays on.
+A five-minute inactivity timeout uses display sleep and ordinary ESP32-C3 light sleep with GPIO6 button wake. The implementation passes software and hardware checks, including sleep/wake behavior. Current consumption and physical wake latency are outside this release's measurement scope. The directly powered backlight stays on.
 
 The physical prototype, wiring, and custom PCB assembly are complete. This specification covers the replacement firmware and its low-power feature.
 
@@ -286,7 +286,7 @@ Ordinary light sleep is the initial approach because it retains application stat
 
 ESP32-C3 GPIO wake from deep sleep is limited to GPIO0–5. GPIO6 therefore does not support this button wake in deep sleep. Peripheral power-down light-sleep configurations have the same restricted wake-pin requirement and are outside the initial implementation.
 
-Ordinary light-sleep consumption, panel restoration, and wake-latency checks passed on the assembled board. See [ESP-IDF sleep modes](https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32c3/api-reference/system/sleep_modes.html) and the [ESP32-C3 GPIO capability definitions](https://github.com/espressif/esp-idf/blob/v6.1/components/soc/esp32c3/include/soc/soc_caps.h).
+Panel restoration passed on the assembled board. Ordinary light-sleep consumption and physical wake latency are outside this release's measurement scope. See [ESP-IDF sleep modes](https://docs.espressif.com/projects/esp-idf/en/v6.1/esp32c3/api-reference/system/sleep_modes.html) and the [ESP32-C3 GPIO capability definitions](https://github.com/espressif/esp-idf/blob/v6.1/components/soc/esp32c3/include/soc/soc_caps.h).
 
 Active current, idle current, and wake-up latency are the power-management performance metrics.
 
@@ -316,7 +316,7 @@ The following acceptance checks define completion of the replacement firmware on
 | Held button | The device does not sleep while the button is held |
 | Wake-up | The previous slide returns without unintended navigation |
 | Repeated sleep | Multiple sleep/wake cycles remain reliable |
-| Power | Active and idle consumption are measured consistently |
+| Power | Functional sleep/wake verified; current reduction is not quantified |
 | Reproducibility | A fresh checkout builds using the documented toolchain |
 
 ## Development Milestones

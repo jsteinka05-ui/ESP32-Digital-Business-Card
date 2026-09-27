@@ -33,6 +33,14 @@ The PCB uses a custom through-hole XIAO footprint. The original surface-mount fo
 
 [Library documentation](schematic/libraries/README.md) describes the footprint variants, project assignments, and upstream sources.
 
+## Fabricated PCB
+
+Bare revision 1.4 PCB before component installation. The component side shows the XIAO footprint, display header, passive-component positions, and button and power-switch connections.
+
+| Component side | Reverse side |
+|---|---|
+| <img src="../docs/media/pcb-component-side.jpeg" alt="Bare revision 1.4 PCB component side with labeled through-hole footprints" width="360"> | <img src="../docs/media/pcb-reverse-side.jpeg" alt="Reverse side of the bare PCB showing routing and through-hole pads" width="360"> |
+
 ## Manufacturing Files
 
 Version **1.4** is the current hardware revision. Versions 1.2 and 1.3 are retained as earlier exports. Each archive contains Gerber layers and plated/non-plated drill files.

@@ -32,14 +32,14 @@ Commit: `7a0ee8d`.
 
 ## Step 2 : Minimal ESP-IDF Application
 
-Status: core application working
+Status: complete
 
 - [x] Set up ESP-IDF v6.1 and the ESP32-C3 development environment.
 - [x] Establish the project build configuration.
 - [x] Implement an increasing counter logged once per second, with a FreeRTOS task delay between messages.
 - [x] Build, flash, and verify counter output on the device through the serial monitor.
 - [x] Add a one-time startup log message before the loop.
-- [ ] Verify counter restart after reset and a USB power cycle.
+- [x] Verify restart after reset and a USB power cycle.
 - [x] Record build, flash, and monitor instructions in `firmware/README.md`.
 
 ## Step 3 : Button Input: Checkpoint 1
@@ -87,7 +87,7 @@ Commit title: `Add ILI9488 display driver and startup diagnostics`
 
 Commit: `632c107`.
 
-Status: implemented; hardware validation remaining
+Status: complete
 
 - [x] Configure SPI2 and LCD control pins as a separate component.
 - [x] Separate bus setup from repeatable panel initialization.
@@ -95,8 +95,8 @@ Status: implemented; hardware validation remaining
 - [x] Add startup color, corner, line, and invalid-coordinate diagnostics.
 - [x] Build successfully and pass simulated transfer/error-path checks.
 - [x] Verify the color sequence and record physical corner positions: blue top-left, red top-right, white bottom-left, green bottom-right.
-- [ ] Verify edge drawing on the LCD.
-- [ ] Verify at least five cold starts and button logging after diagnostics.
+- [x] Verify edge drawing on the LCD.
+- [x] Verify at least five cold starts and button logging after diagnostics.
 
 ## Step 5 : Embedded Images and Slide Navigation
 
@@ -106,7 +106,7 @@ Commit title: `Add embedded slides and short-press navigation`
 
 Commit: `876373f`.
 
-Status: implemented; hardware validation remaining
+Status: complete
 
 - [x] Add the original business-card and QR artwork with reproducible RGB assets.
 - [x] Convert 480 x 320 artwork to native 320 x 480 RGB888 without resizing.
@@ -122,7 +122,8 @@ Status: implemented; hardware validation remaining
 - [x] Verify readable artwork, correct orientation, and one slide change per short press.
 - [x] Verify at least 20 slide changes, wraparound, and no navigation on long holds.
 - [x] Scan the displayed QR code and confirm its destination.
-- [ ] Verify five cold starts and record draw time and heap measurements.
+- [x] Verify five cold starts.
+- [x] Record numerical draw-time and heap results in the release validation record.
 
 ## Step 6 : LCD Recovery and Transitions
 
@@ -169,15 +170,24 @@ Hardware validation completed: 2026-09-27
 - [x] Verify the full five-minute timeout on hardware.
 - [x] Verify ten sleep/wake cycles on both slides and long-held wake suppression.
 - [x] Verify sleep deferral and cancellation during button activity.
-- [x] Measure active current, idle current, and button-to-image wake latency.
+Current consumption and physical wake latency are outside this release's measurement scope.
+
+## Step 8 : Release Validation
+
+Status: in progress
+
+- [x] Complete the remaining functional hardware acceptance checks.
+- [x] Confirm the clean-checkout build workflow.
+- [x] Record startup drawing, transition timing, sampling gaps, and heap measurements.
+- [x] Add device photographs and a demonstration.
 
 ## Upcoming Milestones
 
 | Step | Scope | Status |
 |---|---|---|
 | 3 | Button input, debouncing, and press classification | Complete |
-| 4 | Display initialization, drawing, and orientation | Implemented; hardware validation remaining |
-| 5 | Embedded images and slide navigation | Implemented; hardware validation remaining |
+| 4 | Display initialization, drawing, and orientation | Complete |
+| 5 | Embedded images and slide navigation | Complete |
 | 6 | LCD recovery and incremental animated transitions | Complete |
 | 7 | Inactivity timeout, light sleep, and button wake-up | Complete |
-| 8 | Reproducible builds, measurements, and release validation | Planned |
+| 8 | Reproducible builds, measurements, and release validation | In progress |
