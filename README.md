@@ -79,7 +79,7 @@ docs/                     Design decisions and testing documentation
 
 The intended development environment is:
 
-- VS Code with Espressifâ€™s ESP-IDF extension.
+- VS Code with ESP-IDF extension.
 - ESP-IDF with the ESP32-C3 target and its toolchain.
 - A USB data connection to the XIAO ESP32-C3.
 - Python with Pillow for artwork conversion; the saved RGB assets allow firmware builds without Pillow.
